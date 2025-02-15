@@ -1,0 +1,12 @@
+.favoritesEmpty{
+    position: relative;
+    text-align: center;
+    top: 40vh;
+}
+
+.favoritesText{
+    margin: 10px auto;
+    max-width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}
