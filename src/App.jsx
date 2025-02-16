@@ -4,8 +4,8 @@ import Card from "./components/Card";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { MovieProvider } from "./contexts/FavoriteContext";
 import Navbar from "./components/Navbar";
-import "./styles/index.css"
-import "./styles/App.css"
+import "./styles/index.css";
+import "./styles/App.css";
 import Movie from "./pages/Movie";
 
 function App() {

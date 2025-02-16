@@ -1,12 +1,21 @@
-.favoritesEmpty{
-    position: relative;
-    text-align: center;
-    top: 40vh;
+.favoritesEmpty {
+  position: relative;
+  text-align: center;
+  top: 40vh;
 }
 
-.favoritesText{
-    margin: 10px auto;
-    max-width: fit-content;
-    margin-left: auto;
-    margin-right: auto;
+.favoritesText {
+  margin: 10px auto;
+  max-width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.favoritesEmpty h2 {
+  font-size: 30px;
+}
+
+.favoritesEmpty p {
+  font-size: 22px;
+  font-weight: 600;
 }

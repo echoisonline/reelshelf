@@ -1,11 +1,11 @@
 import { useMovieContext } from "../contexts/FavoriteContext";
 import Card from "../components/Card";
-import "../styles/Favorites.css"
+import "../styles/Favorites.css";
 
 function Favorites() {
-  const {favorites} = useMovieContext();
+  const { favorites } = useMovieContext();
 
-  if (favorites != 0){
+  if (favorites != 0) {
     return (
       <div className="favorites">
         <h2 className="favoritesText">Your Favorites</h2>
@@ -15,7 +15,7 @@ function Favorites() {
           ))}
         </div>
       </div>
-    )
+    );
   }
 
   return (
