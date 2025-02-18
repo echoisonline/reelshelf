@@ -1,0 +1,46 @@
+.posterWrapper {
+  padding: 15px;
+  width: fit-content;
+}
+
+.moviePoster {
+  height: 500px;
+}
+
+.movieInfo {
+  display: flex;
+}
+
+.movieTitle {
+  font-size: 36px;
+  font-weight: 600;
+}
+
+.infoWrapper .releaseDate {
+  position: relative;
+  top: 5px;
+  align-self: center;
+}
+
+.infoWrapper {
+  padding: 15px;
+}
+
+.mainInfo {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.movieTagline {
+  margin-bottom: 10px;
+}
+
+.movieCountry {
+  display: flex;
+}
+
+.movieCountry img {
+  position: relative;
+  top: 2px;
+}

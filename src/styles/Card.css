@@ -1,45 +1,13 @@
-.scrollContainer .movie-card {
-  position: relative;
+.scrollContainer {
   display: flex;
-  flex-direction: column;
-  margin-left: 15px;
-  height: 100%px;
-}
-
-.scrollContainer .movie-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0.1),
-    rgba(0, 0, 0, 0.8)
-  );
-  opacity: 0;
-  transition: opacity 0.2s;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding: 1rem;
-  border-radius: 20px;
-  height: 400px;
-  aspect-ratio: 2/3;
+  gap: 15px;
+  margin: 10px;
 }
 
 .movie-card {
   position: relative;
-  display: inline-flex;
-  justify-content: center;
+  display: flex;
   flex-direction: column;
-  margin-left: 15px;
-  height: 100%px;
-}
-
-.movie-poster img {
-  border-radius: 20px;
-  height: 400px;
 }
 
 .movie-overlay {
@@ -61,7 +29,20 @@
   padding: 1rem;
   border-radius: 20px;
   height: 400px;
-  aspect-ratio: 2/3;
+}
+
+.movie-card {
+  position: relative;
+  display: inline-flex;
+  justify-content: center;
+  flex-direction: column;
+  width: 267px;
+  border: 1px solid red;
+}
+
+.movie-poster img {
+  border-radius: 20px;
+  height: 400px;
 }
 
 .movie-card:hover .movie-overlay {
@@ -137,6 +118,7 @@
 @media (max-width: 768px) {
   .movie-card {
     font-size: 0.9rem;
+    width: 187px;
   }
 
   .movie-info {
@@ -151,10 +133,12 @@
 
   .movie-poster img {
     height: 280px;
+    width: 185px;
   }
 
   .movie-overlay {
     height: 280px;
+    width: 185px;
   }
 
   .movie-info h3 {
