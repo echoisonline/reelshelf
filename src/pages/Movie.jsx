@@ -52,41 +52,42 @@ function Movie() {
   if (error) return <h2>Error: {error}</h2>;
 
   console.log(movie);
-  console.log(movie.origin_country);
+  console.log(movie.tagline);
 
   return (
     <div className="movieInfo">
-      <div className="posterWrapper">
+      <div className="movieBack">
         <img
-          className="moviePoster"
-          src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-          alt="{movie.title}"
+          className="backDrop"
+          src={`https://image.tmdb.org/t/p/w500${movie.backdrop_path}`}
+          alt=""
         />
+        <div className="blur"></div>
+      </div>
+      <div className="infoWrapper mainInfo" id="header">
+        <div className="posterWrapper"></div>
+        <div className="posterWrapper">
+          <img
+            className="moviePoster"
+            src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+            alt="{movie.title}"
+          />
+        </div>
+        <div className="infoWrapper rightSide">
+          <a className="movieTitle">{movie.title}</a>
+          <p className="releaseDate">
+            {movie.status} {formatDate(movie.release_date)},{" "}
+            {movie.origin_country}
+          </p>
+          <a className="movieTagline">
+            {movie.tagline ? (
+              <p className="movieTagline">{movie.tagline}</p>
+            ) : null}
+          </a>
+        </div>
       </div>
 
       <div className="infoWrapper">
-        <div className="mainInfo">
-          <a className="movieTitle">{movie.title}</a>
-          <p className="releaseDate">
-            {movie.status} {formatDate(movie.release_date)}
-          </p>
-        </div>
-        <p className="movieDetails movieCountry">
-          {movie.origin_country}
-          {movie.origin_country && movie.origin_country.length > 0
-            ? movie.origin_country.map((code) => (
-                <span key={code} style={{ marginRight: "10px" }}>
-                  <img
-                    src={getFlagImage(code)}
-                    alt={code}
-                    width="20"
-                    height="15"
-                  />
-                </span>
-              ))
-            : "Unknown"}
-        </p>
-        <h2 className="movieTagline">{movie.tagline}</h2>
         <p className="movieDetails">
           <strong>Genres:</strong>{" "}
           {movie.genres?.map((g) => g.name).join(", ") || "Unknown"}

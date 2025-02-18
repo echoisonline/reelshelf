@@ -9,6 +9,19 @@
 
 .movieInfo {
   display: flex;
+  flex-wrap: wrap;
+}
+
+.movieBack {
+  display: none;
+}
+
+.backDrop {
+  display: none;
+}
+
+.blur {
+  display: none;
 }
 
 .movieTitle {
@@ -16,31 +29,117 @@
   font-weight: 600;
 }
 
-.infoWrapper .releaseDate {
+.releaseDate {
   position: relative;
-  top: 5px;
+  top: 6px;
   align-self: center;
+}
+
+.movieCountry {
+  position: relative;
+  align-self: center;
+  top: 6px;
+  font-size: 24px;
+  /* border: 1px solid red; */
+}
+
+#header {
+  display: flex;
+  justify-content: center;
+}
+
+.movieTagline {
+  font-weight: 600;
 }
 
 .infoWrapper {
   padding: 15px;
+  /* border: 1px solid red; */
 }
 
 .mainInfo {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   gap: 10px;
+  width: 100%;
+  flex-direction: row;
+  /* border: 1px solid red; */
 }
 
 .movieTagline {
-  margin-bottom: 10px;
-}
-
-.movieCountry {
-  display: flex;
+  /* border: 1px solid red; */
 }
 
 .movieCountry img {
   position: relative;
-  top: 2px;
+}
+
+@media (max-width: 768px) {
+  .movieBack {
+    display: unset;
+    width: 100%;
+    height: auto;
+  }
+
+  .backDrop {
+    display: unset;
+    width: 100%;
+    height: auto;
+    position: absolute;
+    z-index: -2;
+    opacity: 0.75;
+    filter: blur(0.5px);
+  }
+
+  .blur {
+    display: unset;
+    z-index: -1;
+    position: absolute;
+    background: linear-gradient(
+      to right,
+      rgba(255, 255, 255, 1) 20%,
+      rgba(255, 255, 255, 0) 50%
+    );
+    height: 100%;
+    width: 100%;
+  }
+
+  .posterWrapper {
+    padding: 0px;
+  }
+
+  .rightSide {
+    background-color: rgb(46, 52, 108, 0.3);
+    border-radius: 20px;
+    height: 196px;
+    border: 2px solid rgb(46, 52, 108, 0.4);
+    z-index: -1;
+  }
+
+  .moviePoster {
+    height: 200px;
+    border-radius: 20px;
+  }
+
+  .mainInfo {
+    padding: 20px;
+  }
+
+  .movieTitle {
+    color: white;
+    font-size: 30px;
+    flex-wrap: wrap;
+  }
+
+  .releaseDate,
+  .movieTagline {
+    font-weight: 600;
+    color: white;
+    align-self: normal;
+    margin-bottom: 4px;
+  }
+
+  .movieTagline {
+    color
+  }
 }

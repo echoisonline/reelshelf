@@ -29,6 +29,7 @@
   padding: 1rem;
   border-radius: 20px;
   height: 400px;
+  width: 265px;
 }
 
 .movie-card {
@@ -43,6 +44,7 @@
 .movie-poster img {
   border-radius: 20px;
   height: 400px;
+  width: 265px;
 }
 
 .movie-card:hover .movie-overlay {

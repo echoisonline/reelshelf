@@ -34,7 +34,7 @@ function Card({ movie }) {
             </div>
             <div className="movie-info">
               <h3 className="title">{movie.title}</h3>
-              <h3 className="releaseDate">
+              <h3 className="release-date">
                 {movie.release_date?.split("-")[0]}
               </h3>
             </div>
