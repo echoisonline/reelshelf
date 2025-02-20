@@ -38,7 +38,6 @@
   justify-content: center;
   flex-direction: column;
   width: 267px;
-  border: 1px solid red;
 }
 
 .movie-poster img {

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { data, useParams } from "react-router-dom";
 import { API_KEY, BASE_URL } from "../services/api";
 import "../styles/Movie.css";
+import CircularRating from "../components/CircularRating.jsx";
 
 const formatDate = (dateString) => {
   const date = new Date(dateString);
@@ -51,50 +52,104 @@ function Movie() {
   console.log(movie);
   console.log(movie.tagline);
 
+  const formatRuntime = (minutes) => {
+    if (minutes < 60) return `${minutes}m`;
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+    return mins === 0 ? `${hours}h` : `${hours}h ${mins}m`;
+  };
+
   return (
     <div className="movieInfo">
-      <div className="movieBack">
-        <img
-          className="backDrop"
-          src={`https://image.tmdb.org/t/p/w500${movie.backdrop_path}`}
-          alt=""
-        />
-        <div className="blur"></div>
-      </div>
-      <div className="infoWrapper mainInfo" id="header">
-        <div className="posterWrapper">
-          <img
-            className="moviePoster"
-            src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-            alt="{movie.title}"
-          />
-        </div>
-        <div className="infoWrapper rightSide">
-          <a className="movieTitle">{movie.title}</a>
-          <p className="releaseDate">
-            {movie.status} {formatDate(movie.release_date)},{" "}
-            {movie.origin_country}
-          </p>
-          <a className="movieTagline">
-            {movie.tagline ? (
-              <p className="movieTagline">{movie.tagline}</p>
-            ) : null}
-          </a>
-        </div>
-      </div>
+      <div className="mainInfo">
+        <div className="header">
+          <div className="movieBack">
+            <div
+              className="backDrop"
+              style={{
+                backgroundImage: `url(https://image.tmdb.org/t/p/w500${movie.backdrop_path})`,
+              }}
+            >
+              <div className="blurBack">
+                <div className="blurLeft"></div>
+              </div>
+            </div>
+          </div>
+          <div className="headerWrapper">
+            <div className="posterWrapper">
+              <img
+                className="moviePoster"
+                src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                alt="{movie.title}"
+              />
+              <div className="scoreWrapper">
+                <p className="movieRating">
+                  <CircularRating rating={movie.vote_average} />
+                  <span>User Score</span>
+                </p>
+              </div>
+            </div>
+            <div className="movieDetailsContainer">
+              <h1 className="movieTitle">{movie.title}</h1>
+              {movie.tagline && <p className="movieTagline">{movie.tagline}</p>}
 
-      <div className="infoWrapper">
-        <p className="movieDetails">
-          <strong>Genres:</strong>{" "}
-          {movie.genres?.map((g) => g.name).join(", ") || "Unknown"}
-        </p>
-        <p className="movieDetails">
-          <strong>Description:</strong> {movie.overview}
-        </p>
+              <div className="movieDetailsGrid">
+                <div className="detailsColumn">
+                  <p className="movieGenres">
+                    <strong>Genres</strong> <br />
+                    {movie.genres?.map((g) => g.name).join(", ") || "Unknown"}
+                  </p>
+                  <p className="releaseDate">
+                    <strong>{movie.status}</strong> <br />
+                    {formatDate(movie.release_date)}, {movie.origin_country}
+                  </p>
+                  <div className="boxOffice">
+                    {movie.budget > 0 && (
+                      <p>
+                        <strong>Budget</strong> <br />
+                        {movie.budget.toLocaleString()}$
+                      </p>
+                    )}
+                    {movie.revenue > 0 && (
+                      <p>
+                        <strong>Revenue</strong> <br />
+                        {movie.revenue.toLocaleString()}$
+                      </p>
+                    )}
+                  </div>
+                </div>
 
-        <p className="movieDetails">
-          <strong>Rating:</strong> {movie.vote_average}
-        </p>
+                <div className="detailsColumn">
+                  <p className="runtime">
+                    <strong>Runtime</strong> <br />
+                    {formatRuntime(movie.runtime)}
+                  </p>
+                  <p className="movieCountries">
+                    <strong>Production Countries</strong> <br />
+                    {movie.production_countries
+                      ?.map((g) => g.name)
+                      .join(", ") || "Unknown"}
+                  </p>
+                  <p className="movieProds">
+                    <strong>Production Companies</strong> <br />
+                    {movie.production_companies
+                      ?.map((g) => g.name)
+                      .join(", ") || "Unknown"}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="movieDetailsContainer">
+          {/* Left Side: Overview */}
+          <div className="movieOverview">
+            <p>{movie.overview}</p>
+          </div>
+
+          {/* Right Side: Other Details */}
+          <div className="movieExtraInfo"></div>
+        </div>
       </div>
     </div>
   );
