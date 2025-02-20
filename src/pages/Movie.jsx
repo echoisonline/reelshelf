@@ -12,9 +12,6 @@ const formatDate = (dateString) => {
   });
 };
 
-const getFlagImage = (countryCode) =>
-  `https://flagcdn.com/w40/${countryCode.toLowerCase()}.png`;
-
 function Movie() {
   const { id } = useParams();
   const [movie, setMovie] = useState(null);
@@ -65,7 +62,6 @@ function Movie() {
         <div className="blur"></div>
       </div>
       <div className="infoWrapper mainInfo" id="header">
-        <div className="posterWrapper"></div>
         <div className="posterWrapper">
           <img
             className="moviePoster"
