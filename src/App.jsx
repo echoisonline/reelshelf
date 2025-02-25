@@ -7,6 +7,7 @@ import Navbar from "./components/Navbar";
 import "./styles/index.css";
 import "./styles/App.css";
 import Movie from "./pages/Movie";
+import SearchResults from "./pages/SearchResults";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/favorites" element={<Favorites />} />
           <Route path="/movie/:id" element={<Movie />} />
+          <Route path="/search" element={<SearchResults />} />
         </Routes>
       </main>
     </MovieProvider>

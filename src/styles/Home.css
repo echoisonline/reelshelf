@@ -1,56 +1,123 @@
-.home{
-    display: flex;
-    padding: 2rem 0;
-    width: 100%;
-    box-sizing: border-box;
-    flex-direction: column;
+.home {
+  display: flex;
+  padding: 2rem 0;
+  width: 100%;
+  box-sizing: border-box;
+  flex-direction: column;
 }
 
-.searchForm{
-    display: flex;
-    gap: 1rem;
-    position: relative;
-    margin: 0 auto;
-    margin-bottom: 15px;
-    align-items: center;
-    left: 14px;
+*::-webkit-scrollbar {
+  width: 1em;
 }
 
-.searchInput{
-    padding: 7px;
-    padding-left: 10px;
-    font-size: 1.2rem;
-    background-color: unset;
-    border: 2px solid rgb(120, 134, 199);
-    border-radius: 99px;
-    transition: 0.2s ease-in;
-    box-shadow: rgba(0, 0, 0, 0.1) 0px 5px 15px;
+*::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  border-radius: 20px;
 }
 
-.searchInput:hover{
-    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+*::-webkit-scrollbar-thumb {
+  background-color: rgb(77, 100, 124);
+  border: 1px solid slategrey;
 }
 
-.searchInput:focus{
-    outline: none;
-    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+.searchForm {
+  display: flex;
+  gap: 1rem;
+  position: relative;
+  margin: 0 auto;
+  margin-bottom: 15px;
+  align-items: center;
+  left: 20px;
 }
 
-.searchButton{
-    border: none;
-    background-color: unset;
-    position: relative;
-    right: 50px;
-    color: rgb(39, 41, 72);
-    cursor: pointer;
+.searchInput {
+  padding: 7px;
+  padding-left: 10px;
+  padding-right: 35px;
+  font-size: 1.2rem;
+  background-color: unset;
+  border: 2px solid rgb(120, 134, 199);
+  border-radius: 99px;
+  transition: 0.2s ease-in;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 5px 15px;
 }
 
-.trending{
-    margin: 0 auto;
-    margin-bottom: 15px;
+.searchInput:hover {
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
-.scrollContainer{
-    display: flex;
-    overflow-x: scroll;
+.searchInput:focus {
+  outline: none;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.searchButton {
+  border: none;
+  background-color: unset;
+  position: relative;
+  right: 50px;
+  color: rgb(39, 41, 72);
+  cursor: pointer;
+}
+
+.trending {
+  margin: 0 auto;
+}
+
+.recentlyViewed {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.scrollContainer {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  gap: 10px;
+  padding: 10px 0;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 20px;
+}
+
+.recentlyViewedHeader {
+  display: flex;
+  justify-content: center;
+  align-items: end;
+  gap: 10px;
+  margin-top: 30px;
+}
+
+.clearButton {
+  background: red;
+  color: white;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 18px;
+  transition: 0.3s;
+}
+
+.clearButton:hover {
+  background: darkred;
+}
+
+.scrollContainer {
+  display: flex;
+  flex-wrap: nowrap; /* Запрещает перенос элементов */
+  overflow-x: auto; /* Добавляет горизонтальный скролл */
+  gap: 10px; /* Отступы между карточками */
+  padding: 10px 0;
+  max-width: 100%; /* Ограничиваем ширину */
+  white-space: nowrap; /* Предотвращает перенос текста */
+}
+
+.searchResults {
+  display: flex;
+  flex-wrap: wrap; /* Позволяет карточкам переноситься */
+  gap: 15px;
+  justify-content: center; /* Центрируем карточки */
+  margin-top: 20px;
 }

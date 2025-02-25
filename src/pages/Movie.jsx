@@ -31,11 +31,12 @@ function Movie() {
         if (!response.ok)
           throw new Error(`HTTP Error! Status: ${response.status}`);
 
-        const text = await response.text(); // Read response as text first
+        const text = await response.text();
         if (!text) throw new Error("Empty response from server");
 
-        const data = JSON.parse(text); // Convert to JSON if it's not empty
+        const data = JSON.parse(text);
         setMovie(data);
+        saveToRecentlyViewed(data);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -45,6 +46,17 @@ function Movie() {
 
     fetchMovie();
   }, [id]);
+
+  const saveToRecentlyViewed = (movie) => {
+    if (!movie) return;
+
+    let viewedMovies = JSON.parse(localStorage.getItem("recentMovies")) || [];
+
+    if (!viewedMovies.some((m) => m.id === movie.id)) {
+      viewedMovies = [movie, ...viewedMovies.slice(0, 9)];
+      localStorage.setItem("recentMovies", JSON.stringify(viewedMovies));
+    }
+  };
 
   if (loading) return <h2>Loading...</h2>;
   if (error) return <h2>Error: {error}</h2>;
@@ -142,12 +154,9 @@ function Movie() {
           </div>
         </div>
         <div className="movieDetailsContainer">
-          {/* Left Side: Overview */}
           <div className="movieOverview">
             <p>{movie.overview}</p>
           </div>
-
-          {/* Right Side: Other Details */}
           <div className="movieExtraInfo"></div>
         </div>
       </div>
