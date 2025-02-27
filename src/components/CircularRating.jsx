@@ -2,17 +2,20 @@ import React from "react";
 import "../styles/CircularRating.css";
 
 const CircularRating = ({ rating }) => {
-  const percentage = Math.round(rating * 10); // Convert rating (e.g., 7.2) to percentage (72)
-  const radius = 25; // Radius of the circle
-  const circumference = 2 * Math.PI * radius; // Full circumference of the circle
-  const offset = circumference - (percentage / 100) * circumference; // Stroke offset to show progress
+  const percentage = Math.round(rating * 10); // Переводим рейтинг в проценты
+  const radius = 25; // Радиус круга
+  const circumference = 2 * Math.PI * radius; // Полный периметр круга
+  const offset = circumference - (percentage / 100) * circumference; // Смещение для прогресса
 
   return (
     <svg width="80" height="80" viewBox="0 0 80 80" className="circular-rating">
-      {/* Background Circle */}
+      {/* Внешний серый круг (фон) */}
       <circle cx="40" cy="40" r={radius} className="circle-bg" />
 
-      {/* Progress Circle */}
+      {/* Внутренний черный круг (фон внутри) */}
+      <circle cx="40" cy="40" r="25" className="circle-bg-inner" />
+
+      {/* Прогресс */}
       <circle
         cx="40"
         cy="40"
@@ -21,14 +24,13 @@ const CircularRating = ({ rating }) => {
         style={{ strokeDashoffset: offset, strokeDasharray: circumference }}
       />
 
-      {/* Rating Text in Center */}
+      {/* Текст внутри круга */}
       <text
-        x="52%"
-        y="-48%"
+        x="50%"
+        y="-54%"
         textAnchor="middle"
         dy=".3em"
         className="rating-text"
-        style={{ fontSize: "18px" }}
       >
         {percentage}%
       </text>

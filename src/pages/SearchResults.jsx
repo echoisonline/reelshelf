@@ -33,7 +33,7 @@ function SearchResults() {
 
   return (
     <div className="searchResultsPage">
-      <h2>Search results for: "{query}"</h2>
+      <h2 className="searchResultsTitle">Search results for: {query}.</h2>
 
       {loading && <p>Loading...</p>}
       {error && <p>{error}</p>}

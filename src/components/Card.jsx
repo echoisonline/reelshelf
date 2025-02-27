@@ -1,6 +1,7 @@
 import "../styles/Card.css";
 import { useMovieContext } from "../contexts/FavoriteContext";
 import { Link } from "react-router-dom";
+import fallbackImage from "../assets/fallback.png";
 
 function Card({ movie }) {
   const { isFavorite, addToFavorites, removeFromFavorites } = useMovieContext();
@@ -12,6 +13,10 @@ function Card({ movie }) {
     else addToFavorites(movie);
   }
 
+  const posterUrl = movie.poster_path
+    ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+    : fallbackImage;
+
   return (
     <>
       <Link
@@ -20,10 +25,7 @@ function Card({ movie }) {
       >
         <div className="movie-card">
           <div className="movie-poster">
-            <img
-              src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-              alt="{movie.title}"
-            />
+            <img src={posterUrl} alt={movie.title} />
             <div className="movie-overlay">
               <button
                 className={`favorite-btn ${favorite ? "active" : ""}`}
