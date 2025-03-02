@@ -61,6 +61,7 @@ src/main.jsx
 src/pages/Favorites.jsx
 src/pages/Home.jsx
 src/pages/Movie.jsx
+src/pages/SearchResults.jsx
 src/services/api.js
 src/styles/App.css
 src/styles/Card.css
@@ -70,6 +71,7 @@ src/styles/Home.css
 src/styles/index.css
 src/styles/Movie.css
 src/styles/Navbar.css
+src/styles/SearchResults.css
 vite.config.js
 
 ================================================================
@@ -233,6 +235,7 @@ import Navbar from "./components/Navbar";
 import "./styles/index.css";
 import "./styles/App.css";
 import Movie from "./pages/Movie";
+import SearchResults from "./pages/SearchResults";
 
 function App() {
   return (
@@ -243,6 +246,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/favorites" element={<Favorites />} />
           <Route path="/movie/:id" element={<Movie />} />
+          <Route path="/search" element={<SearchResults />} />
         </Routes>
       </main>
     </MovieProvider>
@@ -262,6 +266,7 @@ File: src/components/Card.jsx
 import "../styles/Card.css";
 import { useMovieContext } from "../contexts/FavoriteContext";
 import { Link } from "react-router-dom";
+import fallbackImage from "../assets/fallback.png";
 
 function Card({ movie }) {
   const { isFavorite, addToFavorites, removeFromFavorites } = useMovieContext();
@@ -273,6 +278,10 @@ function Card({ movie }) {
     else addToFavorites(movie);
   }
 
+  const posterUrl = movie.poster_path
+    ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+    : fallbackImage;
+
   return (
     <>
       <Link
@@ -281,10 +290,7 @@ function Card({ movie }) {
       >
         <div className="movie-card">
           <div className="movie-poster">
-            <img
-              src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-              alt="{movie.title}"
-            />
+            <img src={posterUrl} alt={movie.title} />
             <div className="movie-overlay">
               <button
                 className={`favorite-btn ${favorite ? "active" : ""}`}
@@ -315,17 +321,20 @@ import React from "react";
 import "../styles/CircularRating.css";
 
 const CircularRating = ({ rating }) => {
-  const percentage = Math.round(rating * 10); // Convert rating (e.g., 7.2) to percentage (72)
-  const radius = 25; // Radius of the circle
-  const circumference = 2 * Math.PI * radius; // Full circumference of the circle
-  const offset = circumference - (percentage / 100) * circumference; // Stroke offset to show progress
+  const percentage = Math.round(rating * 10); // Переводим рейтинг в проценты
+  const radius = 25; // Радиус круга
+  const circumference = 2 * Math.PI * radius; // Полный периметр круга
+  const offset = circumference - (percentage / 100) * circumference; // Смещение для прогресса
 
   return (
     <svg width="80" height="80" viewBox="0 0 80 80" className="circular-rating">
-      {/* Background Circle */}
+      {/* Внешний серый круг (фон) */}
       <circle cx="40" cy="40" r={radius} className="circle-bg" />
 
-      {/* Progress Circle */}
+      {/* Внутренний черный круг (фон внутри) */}
+      <circle cx="40" cy="40" r="25" className="circle-bg-inner" />
+
+      {/* Прогресс */}
       <circle
         cx="40"
         cy="40"
@@ -334,14 +343,13 @@ const CircularRating = ({ rating }) => {
         style={{ strokeDashoffset: offset, strokeDasharray: circumference }}
       />
 
-      {/* Rating Text in Center */}
+      {/* Текст внутри круга */}
       <text
-        x="52%"
-        y="-48%"
+        x="50%"
+        y="-54%"
         textAnchor="middle"
         dy=".3em"
         className="rating-text"
-        style={{ fontSize: "18px" }}
       >
         {percentage}%
       </text>
@@ -482,6 +490,7 @@ import Card from "../components/Card";
 import { useState, useEffect } from "react";
 import { searchMovies, getPopularMovies } from "../services/api";
 import { data } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "../styles/Home.css";
 import "../styles/Card.css";
 
@@ -490,6 +499,8 @@ function Home() {
   const [movies, setMovies] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [recentMovies, setRecentMovies] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const loadPopularMovies = async () => {
@@ -507,9 +518,20 @@ function Home() {
     loadPopularMovies();
   }, []);
 
+  useEffect(() => {
+    const storedMovies = JSON.parse(localStorage.getItem("recentMovies")) || [];
+    setRecentMovies(storedMovies);
+  }, []);
+
+  const clearRecentlyViewed = () => {
+    localStorage.removeItem("recentMovies"); // Удаляем из localStorage
+    setRecentMovies([]); // Очищаем состояние
+  };
+
   const handleSearch = async (e) => {
     e.preventDefault();
     if (!searchQuery.trim()) return;
+    navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
     if (loading) return;
 
     setLoading(true);
@@ -546,7 +568,6 @@ function Home() {
         <div className="loading">Loading...</div>
       ) : (
         <>
-          {/* Показываем "Trending now" и scrollContainer только если нет поиска */}
           {!searchQuery && (
             <>
               <h2 className="trending">Trending now</h2>
@@ -555,6 +576,25 @@ function Home() {
                   <Card movie={movie} key={movie.id} />
                 ))}
               </div>
+
+              {recentMovies.length > 0 && (
+                <>
+                  <div className="recentlyViewedHeader">
+                    <h2 className="recentlyViewed">Recently Viewed</h2>
+                    <button
+                      className="clearButton"
+                      onClick={clearRecentlyViewed}
+                    >
+                      Clear
+                    </button>
+                  </div>
+                  <div className="scrollContainer">
+                    {recentMovies.map((movie) => (
+                      <Card movie={movie} key={movie.id} />
+                    ))}
+                  </div>
+                </>
+              )}
             </>
           )}
 
@@ -611,11 +651,12 @@ function Movie() {
         if (!response.ok)
           throw new Error(`HTTP Error! Status: ${response.status}`);
 
-        const text = await response.text(); // Read response as text first
+        const text = await response.text();
         if (!text) throw new Error("Empty response from server");
 
-        const data = JSON.parse(text); // Convert to JSON if it's not empty
+        const data = JSON.parse(text);
         setMovie(data);
+        saveToRecentlyViewed(data);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -625,6 +666,17 @@ function Movie() {
 
     fetchMovie();
   }, [id]);
+
+  const saveToRecentlyViewed = (movie) => {
+    if (!movie) return;
+
+    let viewedMovies = JSON.parse(localStorage.getItem("recentMovies")) || [];
+
+    if (!viewedMovies.some((m) => m.id === movie.id)) {
+      viewedMovies = [movie, ...viewedMovies.slice(0, 9)];
+      localStorage.setItem("recentMovies", JSON.stringify(viewedMovies));
+    }
+  };
 
   if (loading) return <h2>Loading...</h2>;
   if (error) return <h2>Error: {error}</h2>;
@@ -669,7 +721,7 @@ function Movie() {
                 </p>
               </div>
             </div>
-            <div className="movieDetailsContainer">
+            <div className="pc movieDetailsContainer">
               <h1 className="movieTitle">{movie.title}</h1>
               {movie.tagline && <p className="movieTagline">{movie.tagline}</p>}
 
@@ -721,14 +773,62 @@ function Movie() {
             </div>
           </div>
         </div>
-        <div className="movieDetailsContainer">
-          {/* Left Side: Overview */}
-          <div className="movieOverview">
-            <p>{movie.overview}</p>
+        <div className="mobile movieDetailsContainer">
+          <div className="movieDetailsContainer">
+            <h1 className="movieTitle">{movie.title}</h1>
+            {movie.tagline && <p className="movieTagline">{movie.tagline}</p>}
+
+            <div className="movieDetailsGrid">
+              <div className="detailsColumn">
+                <p className="movieGenres">
+                  <strong>Genres</strong> <br />
+                  {movie.genres?.map((g) => g.name).join(", ") || "Unknown"}
+                </p>
+                <p className="releaseDate">
+                  <strong>{movie.status}</strong> <br />
+                  {formatDate(movie.release_date)}, {movie.origin_country}
+                </p>
+                <div className="boxOffice">
+                  {movie.budget > 0 && (
+                    <p>
+                      <strong>Budget</strong> <br />
+                      {movie.budget.toLocaleString()}$
+                    </p>
+                  )}
+                  {movie.revenue > 0 && (
+                    <p>
+                      <strong>Revenue</strong> <br />
+                      {movie.revenue.toLocaleString()}$
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              <div className="detailsColumn">
+                <p className="runtime">
+                  <strong>Runtime</strong> <br />
+                  {formatRuntime(movie.runtime)}
+                </p>
+                <p className="movieCountries">
+                  <strong>Production Countries</strong> <br />
+                  {movie.production_countries?.map((g) => g.name).join(", ") ||
+                    "Unknown"}
+                </p>
+                <p className="movieProds">
+                  <strong>Production Companies</strong> <br />
+                  {movie.production_companies?.map((g) => g.name).join(", ") ||
+                    "Unknown"}
+                </p>
+              </div>
+            </div>
           </div>
 
-          {/* Right Side: Other Details */}
-          <div className="movieExtraInfo"></div>
+          <div className="mobile movieOverview">
+            <p>{movie.overview}</p>
+          </div>
+        </div>
+        <div className="pc pcMovieOverview">
+          <p>{movie.overview}</p>
         </div>
       </div>
     </div>
@@ -736,6 +836,60 @@ function Movie() {
 }
 
 export default Movie;
+
+================
+File: src/pages/SearchResults.jsx
+================
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import { searchMovies } from "../services/api";
+import Card from "../components/Card";
+import "../styles/SearchResults.css";
+
+function SearchResults() {
+  const [searchParams] = useSearchParams();
+  const query = searchParams.get("q");
+  const [movies, setMovies] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    if (!query) return;
+
+    const fetchMovies = async () => {
+      try {
+        setLoading(true);
+        const results = await searchMovies(query);
+        setMovies(results);
+        setError(null);
+      } catch (err) {
+        console.error(err);
+        setError("Error fetching search results");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMovies();
+  }, [query]);
+
+  return (
+    <div className="searchResultsPage">
+      <h2 className="searchResultsTitle">Search results for: {query}.</h2>
+
+      {loading && <p>Loading...</p>}
+      {error && <p>{error}</p>}
+
+      <div className="searchResultsGrid">
+        {movies.length > 0
+          ? movies.map((movie) => <Card key={movie.id} movie={movie} />)
+          : !loading && <p>No movies found.</p>}
+      </div>
+    </div>
+  );
+}
+
+export default SearchResults;
 
 ================
 File: src/services/api.js
@@ -928,29 +1082,33 @@ File: src/styles/Card.css
 File: src/styles/CircularRating.css
 ================
 .circular-rating {
-  transform: rotate(-90deg); /* Rotates progress bar to start from top */
+  transform: rotate(-90deg); /* Поворачивает прогресс-бар */
 }
 
 .circle-bg {
   fill: none;
-  stroke: #ddd;
+  stroke: #ddd; /* Цвет серого фона */
   stroke-width: 8;
+}
+
+.circle-bg-inner {
+  fill: #2d336b; /* Черный фон внутри круга */
 }
 
 .circle-progress {
   fill: none;
-  stroke: #4caf50; /* Green progress color */
+  stroke: #4caf50; /* Зеленый цвет прогресса */
   stroke-width: 8;
   stroke-linecap: round;
   transition: stroke-dashoffset 0.5s ease-in-out;
 }
 
 .rating-text {
-  position: relative;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: bold;
-  fill: #dddddd;
-  transform: rotate(90deg); /* Rotate text back */
+  fill: white; /* Белый цвет текста */
+  transform: rotate(90deg); /* Исправляем поворот текста */
+  dominant-baseline: middle; /* Выравниваем текст */
 }
 
 ================
@@ -1002,6 +1160,26 @@ File: src/styles/Home.css
   flex-direction: column;
 }
 
+.scrollContainer::-webkit-scrollbar {
+  width: 1em;
+}
+
+.scrollContainer::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  border-radius: 20px;
+}
+
+.scrollContainer::-webkit-scrollbar-thumb {
+  background-color: rgb(77, 100, 124);
+  border: 1px solid slategrey;
+}
+
+.loading {
+  display: flex;
+  font-size: 48px;
+  margin: auto;
+}
+
 .searchForm {
   display: flex;
   gap: 1rem;
@@ -1009,18 +1187,20 @@ File: src/styles/Home.css
   margin: 0 auto;
   margin-bottom: 15px;
   align-items: center;
-  left: 14px;
+  left: 20px;
 }
 
 .searchInput {
   padding: 7px;
   padding-left: 10px;
+  padding-right: 35px;
   font-size: 1.2rem;
   background-color: unset;
   border: 2px solid rgb(120, 134, 199);
   border-radius: 99px;
   transition: 0.2s ease-in;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 5px 15px;
+  text-shadow: none;
 }
 
 .searchInput:hover {
@@ -1043,7 +1223,46 @@ File: src/styles/Home.css
 
 .trending {
   margin: 0 auto;
-  margin-bottom: 15px;
+}
+
+.recentlyViewed {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.scrollContainer {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  gap: 10px;
+  padding: 10px 0;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 20px;
+}
+
+.recentlyViewedHeader {
+  display: flex;
+  justify-content: center;
+  align-items: end;
+  gap: 10px;
+  margin-top: 30px;
+}
+
+.clearButton {
+  background: red;
+  color: white;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 18px;
+  transition: 0.3s;
+}
+
+.clearButton:hover {
+  background: darkred;
 }
 
 .scrollContainer {
@@ -1301,14 +1520,43 @@ strong {
   text-align: justify;
 }
 
+.pcMovieOverview {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  padding: 40px;
+  background: rgb(45, 51, 107);
+  font-size: 24px;
+  line-height: 1.6;
+  color: #fff;
+  justify-self: flex-start;
+  text-align: justify;
+}
+
+.mobile {
+  display: none;
+}
+
 @media (max-width: 768px) {
+  .pc {
+    display: none;
+  }
+
+  .mobile {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .header {
+    min-height: 300px;
+  }
+
   .movieBack {
     display: hidden;
     display: flex;
     background-color: rgb(66, 58, 105, 30%);
     position: absolute;
-    width: 100%;
-    height: 100%;
+    height: 300px;
     z-index: -2;
     box-sizing: border-box;
   }
@@ -1368,23 +1616,68 @@ strong {
   .moviePoster {
     height: 200px;
     border-radius: 20px;
-    margin: 20px 0px 0px 20px;
-  }
-
-  .mainInfo {
-    /* padding: 20px; */
+    margin: 10px 0px 0px 10px;
   }
 
   .movieTitle {
     font-size: 32px;
     flex-wrap: wrap;
+    margin-bottom: 0px;
   }
 
   .releaseDate,
   .movieTagline {
     font-weight: 600;
     align-self: normal;
-    margin-bottom: 4px;
+    margin-bottom: 6px;
+  }
+
+  .scoreWrapper {
+    position: absolute;
+    margin: 10px 0px 0px 10px;
+    display: flex;
+    width: 133px;
+    height: 265px;
+    background-color: #7886c7;
+    z-index: -1;
+    border-radius: 20px;
+    align-items: end;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Soft shadow */
+  }
+
+  .movieRating {
+    height: 70px;
+  }
+
+  .movieRating span {
+    font-size: 18px;
+  }
+
+  .detailsColumn strong {
+    font-size: 20px;
+  }
+
+  .movieDetailsContainer {
+    padding: 0px;
+    margin: 5px;
+  }
+
+  .movieGenres,
+  .releaseDate,
+  .boxOffice,
+  .movieProds,
+  .movieCountries,
+  .runtime {
+    font-size: 16px;
+    margin-bottom: 3px;
+  }
+
+  .movieDetailsGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+    gap: 50px;
+    margin: 10px 0px;
   }
 }
 
@@ -1399,7 +1692,7 @@ File: src/styles/Navbar.css
   padding: 0.75rem 2.5rem;
   text-shadow: 2px 8px 6px rgba(0, 0, 0, 0.2),
     0px -5px 35px rgba(255, 255, 255, 0.3);
-  height: 70px;
+  height: 55px;
   align-items: center;
 }
 
@@ -1421,6 +1714,45 @@ File: src/styles/Navbar.css
 
 .nav-link:hover {
   color: red;
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    height: 40px;
+  }
+
+  .navbar-links {
+    gap: 1rem;
+    font-size: 18px;
+  }
+
+  .navbar-brand a {
+    font-size: 20px;
+  }
+}
+
+================
+File: src/styles/SearchResults.css
+================
+.searchResultsPage {
+  padding: 20px;
+  text-align: center;
+}
+
+.searchResultsGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.searchResultsPage h2 {
+  margin-bottom: 20px;
+}
+
+.searchResultsTitle {
+  font-size: 32px;
 }
 
 ================
