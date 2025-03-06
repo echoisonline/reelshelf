@@ -2,6 +2,9 @@
 
 ReelShelf is a sleek and modern movie app built with React and Vite. It allows users to browse popular movies, search for specific titles, and save their favorite films for easy access.
 
+[Preview](https://echoisonline.github.io/reelshelf/
+) of the app.
+
 ## 🚀 Features
 
 - 🔍 **Search Movies** - Find movies by title.
