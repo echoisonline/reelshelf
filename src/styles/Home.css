@@ -113,18 +113,18 @@
 
 .scrollContainer {
   display: flex;
-  flex-wrap: nowrap; /* Запрещает перенос элементов */
-  overflow-x: auto; /* Добавляет горизонтальный скролл */
-  gap: 10px; /* Отступы между карточками */
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  gap: 10px;
   padding: 10px 0;
-  max-width: 100%; /* Ограничиваем ширину */
-  white-space: nowrap; /* Предотвращает перенос текста */
+  max-width: 100%;
+  white-space: nowrap;
 }
 
 .searchResults {
   display: flex;
-  flex-wrap: wrap; /* Позволяет карточкам переноситься */
+  flex-wrap: wrap;
   gap: 15px;
-  justify-content: center; /* Центрируем карточки */
+  justify-content: center;
   margin-top: 20px;
 }

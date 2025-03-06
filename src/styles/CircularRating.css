@@ -1,20 +1,20 @@
 .circular-rating {
-  transform: rotate(-90deg); /* Поворачивает прогресс-бар */
+  transform: rotate(-90deg);
 }
 
 .circle-bg {
   fill: none;
-  stroke: #ddd; /* Цвет серого фона */
+  stroke: #ddd;
   stroke-width: 8;
 }
 
 .circle-bg-inner {
-  fill: #2d336b; /* Черный фон внутри круга */
+  fill: #2d336b;
 }
 
 .circle-progress {
   fill: none;
-  stroke: #4caf50; /* Зеленый цвет прогресса */
+  stroke: #4caf50;
   stroke-width: 8;
   stroke-linecap: round;
   transition: stroke-dashoffset 0.5s ease-in-out;
@@ -23,7 +23,7 @@
 .rating-text {
   font-size: 16px;
   font-weight: bold;
-  fill: white; /* Белый цвет текста */
-  transform: rotate(90deg); /* Исправляем поворот текста */
-  dominant-baseline: middle; /* Выравниваем текст */
+  fill: white;
+  transform: rotate(90deg);
+  dominant-baseline: middle;
 }
